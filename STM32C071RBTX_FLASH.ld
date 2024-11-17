@@ -130,6 +130,14 @@ SECTIONS
     . = ALIGN(4);
   } >FLASH
 
+  /* RTEdbg data logging memory section */
+  . = ALIGN(4);
+  .RTEDBG (NOLOAD) :
+  {
+    *(RTEDBG)
+    *(RTEDBG*)
+  } >RAM
+
   /* Used by the startup to initialize data */
   _sidata = LOADADDR(.data);
 

@@ -54,6 +54,28 @@ extern "C" {
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
 
+//***** RTEcom demo specific definitions *****
+#define RTECOM_SINGLE_WIRE           0  // 1 - single-wire communication, 0 - two wire communication
+#define RTECOM_READ_ENABLED          0  // 1 - Enable the read from memory (debugging support)
+                                        // 0 - read from embedded system memory disabled
+#define RTECOM_READ_FROM_PERIPHERALS 0  // 1 - atomic 16-bit/32-bit read from RAM or peripheral register enabled
+                                        // 0 - byte by byte read from memory or peripherals
+#define RTECOM_WRITE_ENABLED         0  // 1 - Enable the write data to memory (debugging support)
+                                        // 0 - write to embedded system memory disabled
+
+// Only if a timeout is implemented for receiving messages from the host, the following two macros must be defined.
+// Macro RTECOM_LOG_TIME_LAST_DATA_RECEIVED() stores time of the last message reception from the host.
+#define RTECOM_LOG_TIME_LAST_DATA_RECEIVED()   uwTick_last_byte_received = uwTick
+#define RTECOM_TIMEOUT           100U   // Message reception timeout in ms (unfinished message from host)
+
+// If an inline rte_com_send_data() function is implemented, define the file name of the header with implementation
+#define RTECOM_SERIAL_DRIVER "rte_com_STM32_driver.h"
+
+// Definitions for the rte_com_send_data() function in the rte_com_STM32_driver.h
+#define STM32_DMA_UNIT          DMA1
+#define STM32_LL_DMA_CHANNEL    LL_DMA_CHANNEL_1
+#define STM32_USART             USART2
+
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/
@@ -65,6 +87,9 @@ extern "C" {
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
+#if defined RTECOM_TIMEOUT
+extern uint32_t uwTick_last_byte_received;
+#endif
 
 /* USER CODE END EFP */
 

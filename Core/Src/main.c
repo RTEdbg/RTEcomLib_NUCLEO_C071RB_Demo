@@ -21,7 +21,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "rtedbg.h"
+#include "rte_com_demo_fmt.h"
+#include "rte_com.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -42,7 +44,9 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+#if defined RTECOM_TIMEOUT
+uint32_t uwTick_last_byte_received;  // Time of last message received from host.
+#endif
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -93,6 +97,15 @@ int main(void)
   MX_USART2_UART_Init();
   MX_IWDG_Init();
   /* USER CODE BEGIN 2 */
+#if RTE_SINGLE_SHOT_ENABLED != 0
+    rte_init(RTE_FORCE_ENABLE_ALL_FILTERS, RTE_SINGLE_SHOT_LOGGING);
+#else
+    rte_init(RTE_FORCE_ENABLE_ALL_FILTERS, RTE_CONTINUE_LOGGING);
+#endif
+
+    // Log the reset cause info
+    RTE_MSG1(MSG1_RESET_CAUSE, F_SYSTEM, RCC->CSR2); // Log reset flags
+    LL_RCC_ClearResetFlags();                        // Remove reset flags
 
   /* USER CODE END 2 */
 
@@ -100,6 +113,36 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+      // Toggle the LD1 LED
+	  if (uwTick & 0x100U)
+	  {
+		  LD1_GPIO_Port->BSRR = LD1_Pin;
+	  }
+	  else
+	  {
+		  LD1_GPIO_Port->BRR = LD1_Pin;
+	  }
+
+	  if (((uwTick & 0x3FU) == 0U)      // Every 64 ms
+	      && (uwTick < 10000U))         // Until the time > 10 seconds
+	  {
+		  LL_IWDG_ReloadCounter(IWDG);  // Reload the Watch-Dog counter and log the event
+		  RTE_MSG0(MSG0_IWDG_RELOAD, F_COM_DEMO);
+	  }
+
+	  //***** RTEcom - Example of timeout for the data reception from host *******
+	  // Check if an incomplete received message is in the g_rtecom structure.
+	  // Erase it if yes to enable a clean start of new message reception.
+#if defined RTECOM_TIMEOUT
+	  if (((uwTick - uwTick_last_byte_received) > RTECOM_TIMEOUT)
+	       && (g_rtecom.no_received  != 0))
+	  {
+	      g_rtecom.no_received = 0;     // Restart the command reception from host
+	  }
+#endif
+	  //**************************************************************************
+      HAL_Delay(1);
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -263,6 +306,27 @@ static void MX_USART2_UART_Init(void)
 
   /* USER CODE BEGIN WKUPType USART2 */
 
+#if RTECOM_SINGLE_WIRE
+  /* Reconfigure the USART from two-wire (duplex) to single-wire (half-duplex)
+   * communication to allow easy switching between the two communication modes
+   * with conditional compilation for code testing.
+   */
+
+  // The I/O must be configured so that TX is configured as alternate function
+  // open-drain with an external pull-up.
+  // USART2 GPIO Configuration: PA2   ------> USART2_TX and RX
+  GPIO_InitStruct.Pin = LL_GPIO_PIN_2;
+  GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
+  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_OPENDRAIN;
+  GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  GPIO_InitStruct.Alternate = LL_GPIO_AF_1;
+  LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  // The single-wire mode is enabled with a control bit HDSEL in USART_CR3
+  LL_USART_EnableHalfDuplex(STM32_USART);
+#endif
+
   /* USER CODE END WKUPType USART2 */
 
   LL_USART_Enable(USART2);
@@ -272,6 +336,9 @@ static void MX_USART2_UART_Init(void)
   {
   }
   /* USER CODE BEGIN USART2_Init 2 */
+
+  // Enable the RXNE interrupt
+  LL_USART_EnableIT_RXNE(USART2);
 
   /* USER CODE END USART2_Init 2 */
 

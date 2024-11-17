@@ -22,6 +22,9 @@
 #include "stm32c0xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "rtedbg.h"
+#include "rte_com_demo_fmt.h"
+#include "rte_com.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -78,12 +81,25 @@ extern TIM_HandleTypeDef htim17;
 void EXTI4_15_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI4_15_IRQn 0 */
-
+	static uint8_t count;
   /* USER CODE END EXTI4_15_IRQn 0 */
   if (LL_EXTI_IsActiveRisingFlag_0_31(LL_EXTI_LINE_13) != RESET)
   {
     LL_EXTI_ClearRisingFlag_0_31(LL_EXTI_LINE_13);
     /* USER CODE BEGIN LL_EXTI_LINE_13_RISING */
+
+      // Toggle the LED LD2
+	  if (++count & 1U)
+	  {
+		  LD2_GPIO_Port->BSRR = LD2_Pin;
+	  }
+	  else
+	  {
+		  LD2_GPIO_Port->BRR = LD2_Pin;
+	  }
+
+	  // Log information about the pushbutton event
+	  RTE_EXT_MSG0_8(EXT_MSG0_8_PUSHBUTTON_PRESSED, F_COM_DEMO, count);
 
     /* USER CODE END LL_EXTI_LINE_13_RISING */
   }
@@ -112,6 +128,19 @@ void TIM17_IRQHandler(void)
 void USART2_IRQHandler(void)
 {
   /* USER CODE BEGIN USART2_IRQn 0 */
+
+    // Read the data from the USART receive register
+    uint32_t data = USART2->RDR;
+
+    // Check for any receive errors
+    uint32_t errors = USART2->ISR & (USART_ISR_ORE | USART_ISR_NE | USART_ISR_FE | USART_ISR_PE);
+
+    // Clear the error flags by writing 1 to the respective bits
+    USART2->ICR = errors;
+
+#if RTE_ENABLED != 0
+    rte_com_byte_received(data, errors);
+#endif
 
   /* USER CODE END USART2_IRQn 0 */
   /* USER CODE BEGIN USART2_IRQn 1 */
