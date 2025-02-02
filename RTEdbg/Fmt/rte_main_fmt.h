@@ -7,4 +7,6 @@
 
 // INCLUDE("rte_com_demo_fmt.h")
 
+// INCLUDE("cortex_M0_fault_fmt.h")
+
 #endif

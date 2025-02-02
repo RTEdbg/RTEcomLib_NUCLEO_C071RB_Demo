@@ -7,7 +7,9 @@
 **This repository contains a library of functions, a sample driver for a family of microcontrollers, and demonstration code for transferring data to a host over a serial channel.** 
 The RTEcomLib library is part of the RTEdbg toolkit. See the **[RTEdbg main repository](https://github.com/RTEdbg/RTEdbg)** for the complete toolkit description and links to documentation and other repositories.
 
-The code in this repository demonstrates how to transfer data logged with the RTEdbg library to the host over a serial channel. The demo shows how to transfer data between the embedded system and the host over a two-wire and a single-wire (half-duplex) connection. Single-wire communication is especially useful for microcontrollers with a very limited number of pins or where almost all pins are busy.
+The code in this repository demonstrates:
+1. How to transfer data logged with the RTEdbg library to the host over a serial channel. The demo shows how to transfer data between the embedded system and the host over a two-wire and a single-wire (half-duplex) connection. Single-wire communication is especially useful for microcontrollers with a very limited number of pins or where almost all pins are busy.
+2. How to implement an exception handler for ARM Cortex-M0/M0+ that logs the contents of CPU registers and part of the stack with minimal program memory usage - see **[Exception_handler_Cortex-M0.md](./Exception_handler_Cortex-M0.md)** for details.
 
 Serial data transfer can also be used if transfers with the RTEgdbData utility in parallel with the IDE's built-in debugger are not possible, or if it would limit the functionality of debugging (e.g. if it would be necessary to disable the Live View functionality).
 
@@ -22,7 +24,7 @@ Data transfer to the host is possible with the **[RTEcomData](https://github.com
 In the demo code, the focus is on displaying the data transfer rather than logging. The firmware only logs the following events
 - Type of reset after reset (power-on, watch-dog, from NRST pin, ...)
 - Periodic watchdog update (IWDG)
-- Start of the interrupt program EXTI4_15_IRQHandler() communicated by key B1 (blue key on the demo board)
+- Start of the interrupt program EXTI4_15_IRQHandler() by key B1 (blue key on the NUCLEO-C071RB board)
 
 This code is also a demonstration that logging continues normally after a system reset - e.g. watchdog, reset with key B1 (black key on the demo board). The watchdog reset occurs after about 16 seconds, because the IWDG counter is no longer refreshed after 10 seconds.
 
@@ -79,4 +81,4 @@ The demo project code was generated using the STM32CubeMX. LL (Low Level Drivers
 Follow the [Contributing Guidelines](https://github.com/RTEdbg/RTEdbg/blob/master/docs/CONTRIBUTING.md) for bug reports and feature requests regarding the RTEdbg library. 
 Please use [RTEdbg.freeforums.net](https://rtedbg.freeforums.net/) for general discussions about the RTEdbg toolkit.
 
-When asking a support question, be clear and take the time to explain your problem properly. If your problem is not strictly related to this project, we recommend that you use [Stack Overflow](https://stackoverflow.com/) or similar question-and-answer website instead. First, check if the Readme.md files or [RTEdbg manual](https://github.com/RTEdbg/RTEdbg/releases/download/Documentation/RTEdbg.library.and.tools.manual.pdf) already contains an answer to your question or a solution to your problem.
+When asking a support question, be clear and take the time to explain your problem properly. If your problem is not strictly related to this project, we recommend that you use [Stack Overflow](https://stackoverflow.com/), [r/Embedded](https://www.reddit.com/r/embedded/) or similar question-and-answer website instead. First, check if the Readme.md files or [RTEdbg manual](https://github.com/RTEdbg/RTEdbg/releases/download/Documentation/RTEdbg.library.and.tools.manual.pdf) already contains an answer to your question or a solution to your problem.

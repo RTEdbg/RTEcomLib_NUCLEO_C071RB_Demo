@@ -17,6 +17,7 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
+#include <cortex_M0_fault_fmt.h>
 #include "main.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -425,6 +426,46 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 
+/**
+ * @brief Logs data for the exception handler in the startup assembly file.
+ *
+ * @param sp        Stack pointer address (address of data to be logged)
+ * @param icsr_reg  Value of the ICSR (Interrupt control and state register)
+ *
+ * For more details, refer to the 'Exception_handler_Cortex-M0.md'
+ * document in the main repository folder.
+ */
+
+void __NO_RETURN __attribute__((naked)) log_exception(uint32_t icsr_reg, const uint32_t *sp)
+{
+    UNUSED(icsr_reg); // Mark parameter as unused to suppress compiler warnings
+    /* The 'icsr_reg' value may be used to check which exception vector is active.
+     * Based on this, for example, logging can include either fewer details than
+     * in this case or even additional ones.
+     */
+
+    // Log the exception details using the RTE_MSGN macro
+    RTE_MSGN(MSGN_FATAL_EXCEPTION, F_SYSTEM, sp, 4U * (18U + 12U));
+    /* Legend:
+     *      MSGN_FATAL_EXCEPTION - Format code name
+     *      F_SYSTEM - Message filter number
+     *      sp - Address of the stack where the pushed registers are stored
+     *      4 * (18 + 12) - Size of the CPU register data to be logged
+     *          18 - Number of CPU registers pushed to the stack
+     *          12 - Log 12 words of stack data additionally (stack dump example).
+     *          4U - Size of each register (32-bit)
+     */
+
+    /* Add custom code here to handle the exception.
+     * For example:
+     * - Set peripherals to an inactive state
+     * - Perform a software reset to restart the system
+     */
+
+    // Infinite loop to prevent the function from returning
+    for (;;)
+        ;
+}
 /* USER CODE END 4 */
 
 /**

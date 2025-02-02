@@ -4,14 +4,14 @@
 // FILTER(F_COM_DEMO)
 #define F_COM_DEMO 1U
 
-// MSG1_RESET_CAUSE "Reset cause: 0x%08X:"
+// MSG1_RESET_CAUSE "Reset cause: 0x%08X"
 #define MSG1_RESET_CAUSE 4U
 //  "%[31:1]{ |\n    Low-power reset}Y"
 //  "%[30:1]{ |\n    Window watchdog reset}Y"
 //  "%[29:1]{ |\n    Independent window watchdog reset}Y"
 //  "%[28:1]{ |\n    Software reset}Y"
 //  "%[27:1]{ |\n    BOR or POR/PDR}Y"
-//  "%[26:1]{ |\n    Reset from PF2-NRST pin}Y"
+//  "%[26:1]{ |\n    Reset from NRST pin}Y"
 
 // MSG0_IWDG_RELOAD "IWDG reloaded"
 #define MSG0_IWDG_RELOAD 6U

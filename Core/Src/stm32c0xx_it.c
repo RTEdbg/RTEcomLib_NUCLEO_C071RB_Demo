@@ -101,6 +101,15 @@ void EXTI4_15_IRQHandler(void)
 	  // Log information about the pushbutton event
 	  RTE_EXT_MSG0_8(EXT_MSG0_8_PUSHBUTTON_PRESSED, F_COM_DEMO, count);
 
+#if 1
+#define INVALID_ADDRESS ((volatile uint32_t*)0x07000000)
+	  // Triggering a hard fault after pressing the B1 (USER) button on the NUCLEO PCB twice
+	  if (count > 1)
+	  {
+	      (void)*INVALID_ADDRESS;   // Trigger an exception.
+	  }
+#endif
+
     /* USER CODE END LL_EXTI_LINE_13_RISING */
   }
   /* USER CODE BEGIN EXTI4_15_IRQn 1 */

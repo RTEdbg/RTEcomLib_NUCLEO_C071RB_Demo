@@ -98,16 +98,51 @@ LoopForever:
 
 /**
  * @brief  This is the code that gets called when the processor receives an
- *         unexpected interrupt.  This simply enters an infinite loop, preserving
- *         the system state for examination by a debugger.
+ *         unexpected interrupt or exception.
  *
  * @param  None
  * @retval : None
 */
     .section .text.Default_Handler,"ax",%progbits
 Default_Handler:
-Infinite_Loop:
-  b Infinite_Loop
+/*********************************************************************************
+ * Note: This is a simplified version of the exception handler. It assumes that
+ *       the MSP was used. See the 'Exception_handler_Cortex-M0.md' for details.
+ */
+
+	// R0-R3, R12, LR, PC and xPSR are pushed automatically
+    push {r4-r7}	// Push the remaining 'low' core registers
+
+    /* Get high registers R8-R11 into low registers since Cortex-M0/M0+
+       can only push low registers */
+    mov r0, r8
+    mov r1, r9
+    mov r2, r10
+    mov r3, r11
+    push {r0-r3}
+
+    /* Push the SP value. */
+    mov r1, sp
+    push {r1}
+
+    /* Push the ICSR register - pending and active exception vector info */
+    ldr r0, =0xE000ED04    // ICSR register address
+    ldr r0, [r0]
+    push {r0}
+
+	/* The function for logging the stack contents, where the processor has stored
+	 * the registers, is started from C because it is easier to implement that way.
+	 * A programmer does not need to know the details of the implementation of
+	 * RTEdbg functions and macros for logging data.
+	 *
+	 * The SP address where the registers are is passed to Exception_handler() in
+	 * register R1 and the ICSR (Interrupt control and state register) value in R0.
+	 */
+    mov r1, sp
+    b log_exception
+/*********************************************************************************/
+
+
   .size Default_Handler, .-Default_Handler
 /******************************************************************************
 *

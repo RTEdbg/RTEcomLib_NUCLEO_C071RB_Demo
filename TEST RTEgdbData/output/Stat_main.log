@@ -1,0 +1,15 @@
+Total messages processed: 48
+
+Format IDs: 279 of 1022 used (27,3%)
+
+Messages with the highest frequency (number of occurrences)
+ 1     44 MSG0_IWDG_RELOAD
+ 2      2 EXT_MSG0_8_PUSHBUTTON_PRESSED
+ 3      1 MSG1_RESET_CAUSE
+ 4      1 MSGN_FATAL_EXCEPTION
+
+Messages with the highest circular buffer usage (size in bytes)
+ 1    176 MSG0_IWDG_RELOAD
+ 2    152 MSGN_FATAL_EXCEPTION
+ 3      8 MSG1_RESET_CAUSE
+ 4      8 EXT_MSG0_8_PUSHBUTTON_PRESSED

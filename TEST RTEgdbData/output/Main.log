@@ -1,0 +1,86 @@
+RTEmsg v1.00.04 (Build date: Jan 29 2025)
+Binary file date/time: "Data.bin" 2025-02-01 19:01:59
+Arguments: "output" "..\RTEdbg\Fmt" "-N=10" "Data.bin" "-stat=all" "-time=m" "-timestamps" 
+
+Circular buffer size: 2052 words, last index: 86
+Timestamp frequency: 48 MHz / 8 = 6 MHz, timestamp period: 349,525 ms
+'Post-mortem' data logging
+
+Message filter: 0xFFFFFFFF (filter copy: 0xFFFFFFFF)
+Numbers and names of message filters enabled during data transfer to host
+  0 = 1(1) "System and other important messages"
+  1 = 1(1) "F_COM_DEMO"
+
+MSG #     T[ms] MSG_NAME: custom info
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+N00001    0,002 MSG1_RESET_CAUSE: Reset cause: 0x04000003     
+    Reset from NRST pin
+N00002   51,606 MSG0_IWDG_RELOAD: IWDG reloaded
+N00003  115,606 MSG0_IWDG_RELOAD: IWDG reloaded
+N00004  179,606 MSG0_IWDG_RELOAD: IWDG reloaded
+N00005  243,605 MSG0_IWDG_RELOAD: IWDG reloaded
+N00006  307,605 MSG0_IWDG_RELOAD: IWDG reloaded
+N00007  371,605 MSG0_IWDG_RELOAD: IWDG reloaded
+N00008  435,605 MSG0_IWDG_RELOAD: IWDG reloaded
+N00009  499,606 MSG0_IWDG_RELOAD: IWDG reloaded
+N00010  563,605 MSG0_IWDG_RELOAD: IWDG reloaded
+N00011  627,606 MSG0_IWDG_RELOAD: IWDG reloaded
+N00012  691,606 MSG0_IWDG_RELOAD: IWDG reloaded
+N00013  755,605 MSG0_IWDG_RELOAD: IWDG reloaded
+N00014  819,605 MSG0_IWDG_RELOAD: IWDG reloaded
+N00015  883,605 MSG0_IWDG_RELOAD: IWDG reloaded
+N00016  947,605 MSG0_IWDG_RELOAD: IWDG reloaded
+N00017 1011,606 MSG0_IWDG_RELOAD: IWDG reloaded
+N00018 1075,605 MSG0_IWDG_RELOAD: IWDG reloaded
+N00019 1139,606 MSG0_IWDG_RELOAD: IWDG reloaded
+N00020 1203,606 MSG0_IWDG_RELOAD: IWDG reloaded
+N00021 1267,605 MSG0_IWDG_RELOAD: IWDG reloaded
+N00022 1331,605 MSG0_IWDG_RELOAD: IWDG reloaded
+N00023 1395,605 MSG0_IWDG_RELOAD: IWDG reloaded
+N00024 1459,605 MSG0_IWDG_RELOAD: IWDG reloaded
+N00025 1523,606 MSG0_IWDG_RELOAD: IWDG reloaded
+N00026 1587,605 MSG0_IWDG_RELOAD: IWDG reloaded
+N00027 1651,606 MSG0_IWDG_RELOAD: IWDG reloaded
+N00028 1715,606 MSG0_IWDG_RELOAD: IWDG reloaded
+N00029 1779,605 MSG0_IWDG_RELOAD: IWDG reloaded
+N00030 1843,605 MSG0_IWDG_RELOAD: IWDG reloaded
+N00031 1907,605 MSG0_IWDG_RELOAD: IWDG reloaded
+N00032 1971,605 MSG0_IWDG_RELOAD: IWDG reloaded
+N00033 2035,605 MSG0_IWDG_RELOAD: IWDG reloaded
+N00034 2099,605 MSG0_IWDG_RELOAD: IWDG reloaded
+N00035 2163,606 MSG0_IWDG_RELOAD: IWDG reloaded
+N00036 2227,606 MSG0_IWDG_RELOAD: IWDG reloaded
+N00037 2291,605 MSG0_IWDG_RELOAD: IWDG reloaded
+N00038 2355,605 MSG0_IWDG_RELOAD: IWDG reloaded
+N00039 2399,882 EXT_MSG0_8_PUSHBUTTON_PRESSED: 1 times
+N00040 2419,605 MSG0_IWDG_RELOAD: IWDG reloaded
+N00041 2483,605 MSG0_IWDG_RELOAD: IWDG reloaded
+N00042 2547,606 MSG0_IWDG_RELOAD: IWDG reloaded
+N00043 2611,605 MSG0_IWDG_RELOAD: IWDG reloaded
+N00044 2675,606 MSG0_IWDG_RELOAD: IWDG reloaded
+N00045 2739,606 MSG0_IWDG_RELOAD: IWDG reloaded
+N00046 2803,605 MSG0_IWDG_RELOAD: IWDG reloaded
+N00047 2813,951 EXT_MSG0_8_PUSHBUTTON_PRESSED: 2 times
+N00048 2813,954 MSGN_FATAL_EXCEPTION: 
+CPU registers
+  R00:0x40833FF0, R01:0x40833FF1, R02:0x20000000, R03:0x07000000
+  R04:0x200020A0, R05:0x00000B0A, R06:0x00000100, R07:0x0000AAAA
+  R08:0xFFFFFFFF, R09:0xFFFFFFFF, R10:0xFFFFFFFF, R11:0xFFFFFFFF
+  R12:0xFFFFFFFF,  SP:0x20005F70,  LR:0x0800070D,  PC:0x08000716
+  xPSR:0x01000017, Flags: V=0, C=0, Z=0, N=0
+     Interrupted exception: #23 - IRQx (vector table address: 0x5C)
+  ICSR: 0x00426003
+     Active exception: #3 - HardFault (vector table address: 0x0C)
+     Pending exception: #38 - IRQx (vector table address: 0x98)
+     Interrupt is pending     
+Stack dump (hex)
+  0: 00000002 FFFFFFF9 00000000 00000B0A 
+ 10: 00000000 200020A4 FFFFFFFF 08000829 
+ 20: 08000806 81000000 40003000 200020A4 
+
+No errors were detected while processing the binary file.
+
+Notes/warnings:
+ - Long timestamps were defined for the firmware, but no such message was found in binary data file.
+
+Execution time: 0,042 s / 0,014 s for format file / binary file processing

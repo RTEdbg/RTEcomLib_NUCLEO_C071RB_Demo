@@ -22,6 +22,11 @@
 #include "rtedbg_config.h"  // Project-specific configuration file.
 #include "rte_system_fmt.h" // System message filter and format ID definitions
 
+#if defined RTE_DISABLE_THIS_FILE
+#undef RTE_ENABLED
+#define RTE_ENABLED  0
+#endif
+
 
 #ifdef __cplusplus
 extern "C" {
