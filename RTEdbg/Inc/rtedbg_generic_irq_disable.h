@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Branko Premzel.
+ * Copyright (c) Branko Premzel.
  *
  * SPDX-License-Identifier: MIT
  */
@@ -7,7 +7,7 @@
 /*******************************************************************************
  * @file    rtedbg_generic_irq_disable.h
  * @author  Branko Premzel
- * @version RTEdbg library v1.00.03
+ * @version RTEdbg library v1.01.00
  *
  * @brief  Circular buffer space reservation using interrupt disable/enable.
  *

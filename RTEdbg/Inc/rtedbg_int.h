@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Branko Premzel.
+ * Copyright (c) Branko Premzel.
  *
  * SPDX-License-Identifier: MIT
  */
@@ -10,7 +10,7 @@
  * @brief   Internal definitions for the real-time data logging functions.
  * @note    This file should be included in your program code only if the firmware needs
  *          access to the g_rtedbg data structure to e.g. transfer data to the host.
- * @version RTEdbg library v1.00.03
+ * @version RTEdbg library v1.01.00
  ********************************************************************************/
 
 #ifndef RTEDBG_INT_H
@@ -249,6 +249,10 @@ typedef union
 #else
 #define RTE_FALLTHROUGH  // Compiler might not support preprocessor checks for attributes
 #endif  // defined __has_attribute
+
+#if (RTE_HANDLE_UNALIGNED_MEMORY_ACCESS == 1) && (RTE_DISCARD_MSGS_WITH_UNALIGNED_ADDRESS == 1)
+#error "RTE_HANDLE_UNALIGNED_MEMORY_ACCESS enables special handling of unaligned accesses and prevents them from being discarded."
+#endif
 
 #endif /* RTEDBG_INT_H */
 

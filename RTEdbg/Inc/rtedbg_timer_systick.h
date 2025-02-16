@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Branko Premzel.
+ * Copyright (c) Branko Premzel.
  *
  * SPDX-License-Identifier: MIT
  */
@@ -18,7 +18,7 @@
  *          enabled for that task. Attempts to access these registers from unprivileged
  *          code result in a HardFault exception.
  *
- * @version RTEdbg library v1.00.03
+ * @version RTEdbg library v1.01.00
  **********************************************************************************/
 
 #ifndef RTEDBG_TIMER_SYSTICK_H

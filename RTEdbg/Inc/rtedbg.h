@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Branko Premzel.
+ * Copyright (c) Branko Premzel.
  *
  * SPDX-License-Identifier: MIT
  */
@@ -9,7 +9,18 @@
  * @author  Branko Premzel
  * @brief   RTEdbg library function declarations and macro definitions.
  * @note    This file must be included in all source files that use data logging.
- * @version RTEdbg library v1.00.03
+ * @version RTEdbg library v1.01.00
+ *
+ * @note  Add `#define RTE_USE_INLINE_FUNCTIONS` before include `rtedbg.c` if you
+ *        want to use faster inline versions of the logging functions `__rte_msg0()`
+ *        to `__rte_msg4()` in that file.
+ *        If the source file that includes this header file contains interrupt
+ *        programs that have such a high priority that no other interrupt program
+ *        can interrupt them, a faster non-reentrant version of circular buffer
+ *        reservation can be used for logging, allowing even faster (less intrusive)
+ *        logging. This is done by adding the macro
+ *            #define RTE_USE_LOCAL_CPU_DRIVER "rtedbg_generic_non_reentrant.h"
+ *        before #include `rtedbg.c`.
  *******************************************************************************/
 
 #ifndef RTEDBG_H
@@ -22,7 +33,7 @@
 #include "rtedbg_config.h"  // Project-specific configuration file.
 #include "rte_system_fmt.h" // System message filter and format ID definitions
 
-#if defined RTE_DISABLE_THIS_FILE
+#if defined RTE_DISABLE_RTEDBG_FOR_THIS_FILE
 #undef RTE_ENABLED
 #define RTE_ENABLED  0
 #endif
