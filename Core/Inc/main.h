@@ -67,9 +67,10 @@ extern "C" {
 // Macro RTECOM_LOG_TIME_LAST_DATA_RECEIVED() stores time of the last message reception from the host.
 #define RTECOM_LOG_TIME_LAST_DATA_RECEIVED()   uwTick_last_byte_received = uwTick
 #define RTECOM_TIMEOUT           100U   // Message reception timeout in ms (unfinished message from host)
+    // Note: For single wire communication, the timeout must be longer than the data send time.
 
 // If an inline rte_com_send_data() function is implemented, define the file name of the header with implementation
-#define RTECOM_SERIAL_DRIVER "rte_com_STM32_driver.h"
+#define RTECOM_SERIAL_DRIVER "Portable/rte_com_STM32_driver.h"
 
 // Definitions for the rte_com_send_data() function in the rte_com_STM32_driver.h
 #define STM32_DMA_UNIT          DMA1

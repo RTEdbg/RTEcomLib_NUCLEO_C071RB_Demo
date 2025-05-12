@@ -108,6 +108,11 @@ int main(void)
     RTE_MSG1(MSG1_RESET_CAUSE, F_SYSTEM, RCC->CSR2); // Log reset flags
     LL_RCC_ClearResetFlags();                        // Remove reset flags
 
+#if 1
+    void simple_demo(void);
+    simple_demo();
+#endif
+
   /* USER CODE END 2 */
 
   /* Infinite loop */

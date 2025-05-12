@@ -16,7 +16,7 @@ When generating the initial demo code with the STM32CubeMX, the generation of de
 **Notes:**
 1. To trigger a hard fault exception and test the exception handler, press the B1 (USER) button on the NUCLEO-C071RB board twice. This causes a read from an incorrect address, triggering a hard fault.
 1. When the exception handler is entered, the registers R0-R3, R12, LR, PC, and xPSR are already stored on the stack. For robust programming, it is advisable to check if there is enough space on the stack for additional registers before saving them to avoid another fatal error that could prevent the completion of the data logging.
-2. For projects with an RTOS where the PSP (Program Stack Pointer) is used during task execution, the following must also be considered. When the processor throws an exception, unless it is a tail-chained or late-arriving exception, the processor pushes information onto the current stack. Therefore, when entering the exception handler, it must first check which stack pointer (MSP or PSP) was in use before the exception or interrupt was thrown. In this case, exception logging can be done as shown in the exception handler demo for processors with ARM Cortex-M4 and M7 cores - see [Cortex-M4/M7 exception handler](https://github.com/RTEdbg/RTEdbgDemo/blob/master/Simple_STM32H743\RTEdbg\Demo_code\Cortex_M4-M7_fault_handler.md).
+2. For projects with an RTOS where the PSP (Program Stack Pointer) is used during task execution, the following must also be considered. When the processor throws an exception, unless it is a tail-chained or late-arriving exception, the processor pushes information onto the current stack. Therefore, when entering the exception handler, it must first check which stack pointer (MSP or PSP) was in use before the exception or interrupt was thrown. In this case, exception logging can be done as shown in the exception handler demo for processors with ARM Cortex-M4 and M7 cores - see [Cortex-M4/M7 exception handler](https://github.com/RTEdbg/RTEdbgDemo/blob/master/STM32H743/RTEdbg/Demo_code/Fault_handler.md).
 3. If you are interested in how data is passed from assembly code to C code, read the [ARM Procedure Call Standard](https://developer.arm.com/documentation/den0013/d/Application-Binary-Interfaces/Procedure-Call-Standard).
 4. If you want to learn more about exception handlers, read [Segger AN00016 - Analyzing HardFaults on Cortex-M CPU](https://www.segger.com/downloads/application-notes/AN00016).
 
@@ -35,6 +35,11 @@ If you are going to do a large stack dump along with the CPU registers, there ar
 Default_Handler:
 /* Note: This is a simplified version of the exception handler. It assumes that
  *       the MSP was used. See the 'Exception_handler_Cortex-M0.md' for details.
+ *       There are already some registers on the stack when the CPU enters the
+ *       fault service routine. Additional registers are pushed onto the stack
+ *       later. It is used as a buffer or data structure with the data it is
+ *       logging. It is recommended to check if there is enough space before
+ *       pushing additional content onto the stack.
  */
 
 	// R0-R3, R12, LR, PC and xPSR are pushed automatically
@@ -132,7 +137,7 @@ void __NO_RETURN __attribute__((naked)) log_exception(uint32_t icsr_reg, const u
 // "%[544:32u]{ | }Y\nStack dump (hex)%4H"
 ```
 Notes:
-1. The "#define MSGN_FATAL_EXCEPTION 16U" is automatically inserted during the precompile phase.
+1. The "#define MSGN_FATAL_EXCEPTION ID_number" is automatically inserted during the precompile phase.
 2. The "%[64:32u]08X" is an example of how to set the address of the first bit and the size of a value to be printed. The value starts at bit 64 (third word), has a size of 32 bits and is an unsigned integer.
 3. If only 18 words are logged, then nothing is displayed for "Stack dump (hex)".
 

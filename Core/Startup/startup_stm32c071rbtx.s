@@ -105,9 +105,13 @@ LoopForever:
 */
     .section .text.Default_Handler,"ax",%progbits
 Default_Handler:
-/*********************************************************************************
- * Note: This is a simplified version of the exception handler. It assumes that
+/* Note: This is a simplified version of the exception handler. It assumes that
  *       the MSP was used. See the 'Exception_handler_Cortex-M0.md' for details.
+ *       There are already some registers on the stack when the CPU enters the
+ *       fault service routine. Additional registers are pushed onto the stack
+ *       later. It is used as a buffer or data structure with the data it is
+ *       logging. It is recommended to check if there is enough space before
+ *       pushing additional content onto the stack.
  */
 
 	// R0-R3, R12, LR, PC and xPSR are pushed automatically

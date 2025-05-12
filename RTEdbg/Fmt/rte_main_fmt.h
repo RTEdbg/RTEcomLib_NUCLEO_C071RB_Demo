@@ -9,4 +9,6 @@
 
 // INCLUDE("cortex_M0_fault_fmt.h")
 
+// INCLUDE("simple_demo_fmt.h")
+
 #endif

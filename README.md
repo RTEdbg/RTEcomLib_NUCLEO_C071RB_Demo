@@ -9,17 +9,16 @@ The RTEcomLib library is part of the RTEdbg toolkit. See the **[RTEdbg main repo
 
 The code in this repository demonstrates:
 1. How to transfer data logged with the RTEdbg library to the host over a serial channel. The demo shows how to transfer data between the embedded system and the host over a two-wire and a single-wire (half-duplex) connection. Single-wire communication is especially useful for microcontrollers with a very limited number of pins or where almost all pins are busy.
-2. How to implement an exception handler for ARM Cortex-M0/M0+ that logs the contents of CPU registers and part of the stack with minimal program memory usage - see **[Exception_handler_Cortex-M0.md](./Exception_handler_Cortex-M0.md)** for details.
+2. How to implement an exception handler for ARM Cortex-M0/M0+ that logs the contents of CPU registers and part of the stack with minimal program memory usage - see **[Exception_handler_Cortex-M0.md](./Exception_handler_Cortex-M0.md)** for details. <br> **Note:** The hard fault is triggered after pressing key B1 (blue key on the NUCLEO-C071RB board) twice. A hard fault has a very high (fixed) priority. When the processor enters this handler, it stops executing lower-priority code and thus stops the reception of data from the serial channel in the `USART2_IRQHandler()`. In this demo, data transfer to the host is re-enabled after the watchdog resets the processor.
 
-Serial data transfer can also be used if transfers with the RTEgdbData utility in parallel with the IDE's built-in debugger are not possible, or if it would limit the functionality of debugging (e.g. if it would be necessary to disable the Live View functionality).
+Serial data transfer can also be used if transfers with the RTEgetData utility using GDB server protocol in parallel with the IDE's built-in debugger are not possible, or if it would limit the functionality of debugging (e.g. if it would be necessary to disable the Live View functionality).
 
-The programmer must initialize the serial peripheral with the selected baud rate and the following parameters:
-
+The serial channel in the demo is initialized with the following parameters:
 * Number of bits: 8
-* Parity: none, odd or even
+* Parity: none
 * Stop bits: 1
 
-Data transfer to the host is possible with the **[RTEcomData](https://github.com/RTEdbg/RTEcomData)** utility.
+Data transfer to the host is possible with the **[RTEgetData](https://github.com/RTEdbg/RTEgetData)** utility. See the data transfer batch file examples in `ReadData-COM-Once.bat` and `ReadData-COM-Persistent.bat`.
 
 In the demo code, the focus is on displaying the data transfer rather than logging. The firmware only logs the following events
 - Type of reset after reset (power-on, watch-dog, from NRST pin, ...)
@@ -34,10 +33,13 @@ The source code for the data transfer functions in the RTEcomLib folder - see th
 If serial communication is used in an electrically noisy environment, the following measures should be taken:
 1. Keep the connection to the host as short as possible, use twisted and/or shielded cable, filtering, etc.
 2. Enable parity on the serial link.
-3. Implement the timeout for data reception in the embedded system (see the implementation in the main.c demo file).
+3. Implement the timeout for data reception in the embedded system - see the example of implementation in the `main.c` demo file <br> `#if defined RTECOM_TIMEOUT ...` <br>
+**Alternative Implementation:** 
+In the data reception function (in the demo, this is `USART2_IRQHandler()`), after receiving each byte, store the current time at the end of the function (e.g., `uwTick` if using an STM32). At the beginning of the function, check if the time difference is too large (greater than the timeout value). If so, reset the index to 0 (`g_rtecom.no_received = 0;`) and store the newly received data. <br>
+This approach ensures that if a timeout occurs between received bytes, the reception buffer is reset, preventing partial or corrupted data sequences.
 
 When the host and the embedded system get out of sync, the host data transfer utility should send either a BREAK sequence of bits or 10 consecutive characters with a value greater than RTECOM_LAST_COMMAND (e.g. 0xFF).
-<br> Note: If a BREAK character is received, the USART will treat it as a framing error.
+<br> **Note:** If a BREAK character is received, the USART will treat it as a framing error.
 
 ### How to test the two-wire or single-wire communication on the NUCLEO-C071RB demo board
 
@@ -63,22 +65,24 @@ Very high baud rates are usually not useful for real-time projects because inter
 
 To achieve faster transfer execution and less impact on the tested application, at least for the serial channel transfer functions, enable a higher level of compiler optimization and use optimized low-level code in the serial channel interrupt program to receive data from the host.
 
-## Meaning of Repository Tags
+**Note:** More powerful processor cores include execution acceleration mechanisms such as write buffers and data caches. If DMA is used to transfer data to the host, either the message filter must be set to 0 and a memory barrier instruction must be executed before the transfer begins, or there must be some other way to ensure that the data is properly written to memory. In the case of a data cache, this can also be achieved by placing the `g_rtedbg' structure in a memory region configured with the write-through storage method.
+
+## Repository Tags
 
 |Tag|Description|
 |:---:|:-----------|
 | **v0.99** | The code generated using HAL LL (Low Level) drivers as a basis to demonstrate RTEcomLib functions for transferring data from an embedded system with limited resources. Several unnecessary files have been deleted from the `Drivers\CMSIS\Include` folder. |
 | **v1.00** | Added RTEcomLib code for serial data transfer to host, RTEdbg data logging and test code. |
+| **v1.01** | |
 
 Compare v0.99 and v.100 using e.g. WinMerge to see what has been done to integrate the RTEcomLib serial communication library and the RTElib data logging library.
 
 ## Notes on the STM32C071 Demo Project
 The code of this project is intended to demonstrate functions for transferring logged and other data from the embedded system. The functions for transferring data over the serial channel are located in the file *RTEcomLib/rte_com*.c. The *RTEcomLib* folder also contains header files and a DMA driver for the STM32 processor family. The definitions of the various constants needed to compile the data transfer functions are located in the file *Core/Inc/main.h*.
 
-The demo project code was generated using the STM32CubeMX. LL (Low Level Drivers) instead of the standard HAL was enabled for all peripheral drivers in "Project Manager => Advanced Options". The generated initialization code is far from what the author considers low level. This code has not been optimized for generality, only the code in the RTEcomLib folder has been optimized. For your project, you will have to optimize the initialization code by hand and remove anything unnecessary if you have problems with Flash memory space.
+The demo project code was generated using the STM32CubeMX. LL (Low Level Drivers) instead of the standard HAL was enabled for all peripheral drivers in "Project Manager => Advanced Options". The generated initialization code is far from what the author would consider low-level. It has not been optimized for general use - only the code in the `RTEcomLib` folder has been optimized. For your project, you may need to manually optimize the initialization code and remove any unnecessary components if you encounter problems with Flash memory space.
 
 ## How to contribute or get help
-Follow the [Contributing Guidelines](https://github.com/RTEdbg/RTEdbg/blob/master/docs/CONTRIBUTING.md) for bug reports and feature requests regarding the RTEdbg library. 
-Please use [RTEdbg.freeforums.net](https://rtedbg.freeforums.net/) for general discussions about the RTEdbg toolkit.
+Follow the [Contributing Guidelines](https://github.com/RTEdbg/RTEdbg/blob/master/docs/CONTRIBUTING.md) for bug reports and feature requests regarding the RTEdbg library.
 
 When asking a support question, be clear and take the time to explain your problem properly. If your problem is not strictly related to this project, we recommend that you use [Stack Overflow](https://stackoverflow.com/), [r/Embedded](https://www.reddit.com/r/embedded/) or similar question-and-answer website instead. First, check if the Readme.md files or [RTEdbg manual](https://github.com/RTEdbg/RTEdbg/releases/download/Documentation/RTEdbg.library.and.tools.manual.pdf) already contains an answer to your question or a solution to your problem.
