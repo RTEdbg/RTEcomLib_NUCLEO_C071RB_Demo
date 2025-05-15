@@ -67,15 +67,7 @@ To achieve faster transfer execution and less impact on the tested application, 
 
 **Note:** More powerful processor cores include execution acceleration mechanisms such as write buffers and data caches. If DMA is used to transfer data to the host, either the message filter must be set to 0 and a memory barrier instruction must be executed before the transfer begins, or there must be some other way to ensure that the data is properly written to memory. In the case of a data cache, this can also be achieved by placing the `g_rtedbg' structure in a memory region configured with the write-through storage method.
 
-## Repository Tags
-
-|Tag|Description|
-|:---:|:-----------|
-| **v0.99** | The code generated using HAL LL (Low Level) drivers as a basis to demonstrate RTEcomLib functions for transferring data from an embedded system with limited resources. Several unnecessary files have been deleted from the `Drivers\CMSIS\Include` folder. |
-| **v1.00** | Added RTEcomLib code for serial data transfer to host, RTEdbg data logging and test code. |
-| **v1.01** | |
-
-Compare v0.99 and v.100 using e.g. WinMerge to see what has been done to integrate the RTEcomLib serial communication library and the RTElib data logging library.
+Compare the initial version (v0.99) and latest version using e.g. WinMerge to see what has been done to integrate the RTEcomLib serial communication library and the RTElib data logging library.
 
 ## Notes on the STM32C071 Demo Project
 The code of this project is intended to demonstrate functions for transferring logged and other data from the embedded system. The functions for transferring data over the serial channel are located in the file *RTEcomLib/rte_com*.c. The *RTEcomLib* folder also contains header files and a DMA driver for the STM32 processor family. The definitions of the various constants needed to compile the data transfer functions are located in the file *Core/Inc/main.h*.
