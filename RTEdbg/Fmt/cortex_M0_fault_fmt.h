@@ -6,7 +6,6 @@
 // IN_FILE(EXC_NAMES, "cortex_M0_exceptions.txt")
 
 // MSGN_FATAL_EXCEPTION
-#define MSGN_FATAL_EXCEPTION 16U
 // "\nCPU registers"
 // "\n  R00:0x%[320:32u]08X, R01:0x%08X, R02:0x%08X, R03:0x%08X"
 // "\n  R04:0x%[192:32u]08X, R05:0x%08X, R06:0x%08X, R07:0x%08X"
@@ -24,6 +23,8 @@
 // "%[+2:1u]{ |\n     NMI exception is pending}Y"
 /* Delete the last string of format definition (starting with "%[544:32u]) in case no stack dump will be logged. */
 /* Note: The "%[544:32u]{ | }Y" is a dummy print to set the address from which the stack data begins. */
+/*       The address is increased by 32 after the dummy value is printed. */
+/*       Dump starts at stack word 18 => (544 + 32) / 32 = 18 */
 // "%[544:32u]{ | }Y\nStack dump (hex)%4H"
 
 #endif

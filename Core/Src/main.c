@@ -139,12 +139,14 @@ int main(void)
 	  //***** RTEcom - Example of timeout for the data reception from host *******
 	  // Check if an incomplete received message is in the g_rtecom structure.
 	  // Erase it if yes to enable a clean start of new message reception.
+#if RTE_ENABLED == 1
 #if defined RTECOM_TIMEOUT
 	  if (((uwTick - uwTick_last_byte_received) > RTECOM_TIMEOUT)
 	       && (g_rtecom.no_received  != 0))
 	  {
 	      g_rtecom.no_received = 0;     // Restart the command reception from host
 	  }
+#endif
 #endif
 	  //**************************************************************************
       HAL_Delay(1);
