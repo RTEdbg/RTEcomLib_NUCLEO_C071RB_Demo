@@ -4,7 +4,7 @@ REM Read the documentation in the Readme file.
 
 if not exist output md output
 
-c:\RTEdbg\RTEmsg\RTEmsg.exe output ..\RTEdbg\Fmt -N=10 Data.bin -stat=all -time=m -timestamps
+RTEMSG.EXE output ..\RTEdbg\Fmt -N=10 Data.bin -stat=all -time=m -timestamps
 REM Show data only if no error (0) or no fatal errors found (3)
 IF %ERRORLEVEL% EQU 0 goto ShowData
 IF %ERRORLEVEL% EQU 3 goto ShowData

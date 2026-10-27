@@ -2,7 +2,7 @@
 
 The TEST folder contains batch files for data transfer from the embedded system to the host using ST-LINK or J-LINK debug probes. Data decoding and display is also started from the same batch files. These files are just examples of how it is possible to automate the whole process.
 
-**Note:** The **RTEgetData command line utility** is available. It allows data to be transferred in a uniform way via a GDB server. This makes it possible to transfer data to the host even for debug probes that do not have a command line utility for transferring data. See the readme in the *c:\RTEdbg\UTIL\RTEgetData* folder or in the **[RTEgetData Github repository](https://github.com/RTEdbg/RTEgetData)**. Examples of batch files are in the TEST subfolder.
+**Note:** The **RTEgetData command line utility** is available. It allows data to be transferred in a uniform way via a GDB server. This makes it possible to transfer data to the host even for debug probes that do not have a command line utility for transferring data. See the readme in the **[RTEgetData Github repository](https://github.com/RTEdbg/RTEgetData)**. Examples of batch files are in the TEST subfolder.
 
 
 Before using batch files in your project, do the following

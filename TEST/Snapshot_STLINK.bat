@@ -8,7 +8,6 @@ if not exist output md output
 
 REM The command CD (change working directory) is only necessary if the batch file
 REM  is started from a program like the Notepad++
-REM cd "c:\RTEdbg\Demo\STM32L053\TEST"
 
 if exist Data.bin del Data.bin
 
